@@ -21,6 +21,8 @@
     --status-ok:#16a34a; --status-ok-bg:#f0fdf4;
     --status-at:#dc2626; --status-at-bg:#fef2f2;
     --status-mn:#7c3aed; --status-mn-bg:#f5f3ff;
+    --status-ps:#0891b2; --status-ps-bg:#ecfeff;
+    --weekend-bg:#fff5f5;
     --shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.05);
     --shadow-lg:0 8px 32px rgba(0,0,0,.10); --radius:12px;
   }
@@ -45,19 +47,16 @@
   @keyframes spin{to{transform:rotate(360deg)}}
   #loadingText{font-size:13px;font-weight:500;color:var(--text3);}
 
-  /* ALERT BANNER */
   #alertBanner{display:none;position:fixed;top:60px;left:0;right:0;z-index:400;padding:8px 16px;pointer-events:none;}
   #alertBanner.show{display:block;}
   .alert-card{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;padding:12px 16px;margin:4px auto;max-width:640px;box-shadow:var(--shadow-lg);pointer-events:all;display:flex;align-items:center;gap:12px;animation:slideDown .3s ease;}
   .alert-card.vencido{background:#fef2f2;border-color:#ef4444;}
   @keyframes slideDown{from{transform:translateY(-8px);opacity:0}to{transform:translateY(0);opacity:1}}
-  .alert-icon{font-size:18px;flex-shrink:0;}
   .alert-body{flex:1;}
   .alert-title{font-size:12px;font-weight:700;color:#92400e;margin-bottom:1px;}
   .alert-card.vencido .alert-title{color:#991b1b;}
   .alert-text{font-size:11px;color:var(--text2);line-height:1.4;}
   .alert-close{background:none;border:none;font-size:14px;cursor:pointer;color:var(--text3);padding:0 2px;}
-  .alert-close:hover{color:var(--text);}
   .alert-action{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:5px 10px;font-family:'Sora',sans-serif;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;}
 
   header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--border);}
@@ -71,7 +70,7 @@
   .btn-new{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;}
   .btn-new:hover{background:#b8450f;transform:translateY(-1px);}
 
-  .toolbar{padding:16px 24px;display:flex;align-items:center;gap:12px;background:var(--surface2);border-bottom:1px solid var(--border);flex-wrap:wrap;}
+  .toolbar{padding:12px 24px;display:flex;align-items:center;gap:12px;background:var(--surface2);border-bottom:1px solid var(--border);flex-wrap:wrap;}
   .nav-arrow{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .12s;color:var(--text2);}
   .nav-arrow:hover{background:var(--bg);color:var(--text);}
   .period-label{font-size:15px;font-weight:600;min-width:180px;text-align:center;letter-spacing:-.2px;}
@@ -80,99 +79,145 @@
   .toolbar-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
   .filter-select{padding:6px 10px;border-radius:7px;border:1px solid var(--border);background:var(--surface);font-family:'Sora',sans-serif;font-size:12px;color:var(--text2);cursor:pointer;}
 
-  main{padding:24px;}
+  main{padding:16px 24px;}
 
-  .week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;}
-  .day-col{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;min-height:500px;}
-  .day-col.today{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-light);}
-  .day-header{padding:10px 12px;border-bottom:1px solid var(--border);text-align:center;}
-  .day-name{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);}
-  .day-num{font-size:20px;font-weight:700;letter-spacing:-.5px;line-height:1.2;margin-top:2px;}
+  /* ── WEEK VIEW ── */
+  .week-wrapper{display:flex;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface);}
+
+  .time-col{width:52px;flex-shrink:0;border-right:1px solid var(--border);background:var(--surface2);}
+  .time-col-header{height:56px;border-bottom:1px solid var(--border);}
+  .time-slot-label{height:56px;display:flex;align-items:flex-start;justify-content:flex-end;padding:4px 6px 0 0;font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);border-bottom:1px solid var(--border);}
+
+  .week-cols{display:grid;grid-template-columns:repeat(7,1fr);flex:1;min-width:0;}
+
+  .day-col{border-right:1px solid var(--border);min-width:0;overflow:hidden;}
+  .day-col:last-child{border-right:none;}
+  .day-col.today .day-header{background:var(--accent-light);}
   .day-col.today .day-num{color:var(--accent);}
-  .day-cards{padding:8px;display:flex;flex-direction:column;gap:6px;min-height:60px;}
+  .day-col.weekend{background:var(--weekend-bg);}
+  .day-col.feriado{background:var(--weekend-bg);}
 
-  .month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+  .day-header{padding:8px 6px 6px;border-bottom:1px solid var(--border);text-align:center;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .day-name{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);}
+  .day-num{font-size:18px;font-weight:700;letter-spacing:-.5px;line-height:1.2;}
+  .feriado-label{font-size:8px;color:#dc2626;font-weight:600;text-transform:uppercase;letter-spacing:.3px;margin-top:1px;}
+
+  .day-slots{position:relative;}
+  .hour-slot{height:56px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+  .hour-slot:hover{background:var(--accent-light);}
+  .day-col.weekend .hour-slot{background:rgba(220,38,38,.03);}
+  .day-col.weekend .hour-slot:hover{background:rgba(220,38,38,.08);}
+
+  .day-cards-overlay{padding:4px;display:flex;flex-direction:column;gap:4px;}
+
+  /* ── MONTH VIEW ── */
+  .month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
   .month-day-header{text-align:center;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);padding:8px 0;}
-  .month-cell{background:var(--surface);border:1px solid var(--border);border-radius:10px;min-height:100px;padding:8px;transition:box-shadow .12s;}
+  .month-cell{background:var(--surface);border:1px solid var(--border);border-radius:8px;min-height:90px;padding:6px;transition:box-shadow .12s;cursor:pointer;}
   .month-cell:hover{box-shadow:var(--shadow);}
   .month-cell.today{border-color:var(--accent);}
-  .month-cell.other-month{background:var(--bg);opacity:.6;}
-  .month-cell-num{font-size:13px;font-weight:600;color:var(--text2);margin-bottom:4px;display:flex;align-items:center;gap:4px;}
+  .month-cell.other-month{background:var(--bg);opacity:.5;}
+  .month-cell.weekend{background:var(--weekend-bg);}
+  .month-cell.feriado{background:var(--weekend-bg);}
+  .month-cell-num{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:3px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
   .month-cell.today .month-cell-num{color:var(--accent);}
-  .today-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;}
+  .today-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;flex-shrink:0;}
+  .feriado-tag{font-size:8px;color:#dc2626;font-weight:700;background:#fef2f2;border-radius:3px;padding:1px 4px;}
 
+  /* ── YEAR VIEW ── */
   .year-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
   .mini-month{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:14px;}
-  .mini-month-title{font-size:13px;font-weight:700;margin-bottom:10px;letter-spacing:-.2px;}
+  .mini-month-title{font-size:13px;font-weight:700;margin-bottom:10px;letter-spacing:-.2px;display:flex;justify-content:space-between;align-items:center;}
   .mini-month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-size:10px;font-family:'JetBrains Mono',monospace;}
   .mini-day-name{text-align:center;color:var(--text3);font-weight:500;padding:2px 0;}
-  .mini-day{text-align:center;padding:3px 1px;border-radius:4px;cursor:pointer;color:var(--text2);transition:all .1s;}
+  .mini-day{text-align:center;padding:3px 1px;border-radius:4px;cursor:pointer;color:var(--text2);transition:all .1s;position:relative;}
   .mini-day:hover{background:var(--bg);}
   .mini-day.has-event{font-weight:700;color:var(--accent);}
   .mini-day.today-mini{background:var(--accent);color:#fff;}
   .mini-day.other{color:var(--text3);}
+  .mini-day.weekend-mini{color:#dc2626;opacity:.7;}
+  .mini-day.today-mini.weekend-mini{color:#fff;opacity:1;}
 
-  .card{border-radius:8px;padding:8px 10px;border-left:3px solid;cursor:pointer;position:relative;transition:all .12s;font-size:12px;}
+  /* ── CARDS ── */
+  .card{border-radius:7px;padding:6px 8px;border-left:3px solid;cursor:pointer;position:relative;transition:all .12s;font-size:11px;}
   .card:hover{transform:translateX(2px);box-shadow:var(--shadow);}
   .card.ag{background:var(--status-ag-bg);border-color:var(--status-ag);}
   .card.em{background:var(--status-em-bg);border-color:var(--status-em);}
   .card.ok{background:var(--status-ok-bg);border-color:var(--status-ok);}
   .card.at{background:var(--status-at-bg);border-color:var(--status-at);}
   .card.mn{background:var(--status-mn-bg);border-color:var(--status-mn);}
-  .card-name{font-weight:600;font-size:12px;line-height:1.3;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .card-date{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);}
-  .card-badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;margin-top:4px;text-transform:uppercase;letter-spacing:.3px;}
+  .card.ps{background:var(--status-ps-bg);border-color:var(--status-ps);}
+  .card-name{font-weight:600;line-height:1.3;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .card-time{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);margin-bottom:2px;}
+  .card-meta{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+  .card-badge{display:inline-block;font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px;text-transform:uppercase;letter-spacing:.3px;}
   .card.ag .card-badge{background:var(--status-ag);color:#fff;}
   .card.em .card-badge{background:var(--status-em);color:#fff;}
   .card.ok .card-badge{background:var(--status-ok);color:#fff;}
   .card.at .card-badge{background:var(--status-at);color:#fff;}
   .card.mn .card-badge{background:var(--status-mn);color:#fff;}
-  .card-obs-icon{position:absolute;top:8px;right:8px;font-size:13px;opacity:.6;}
-  .mini-card{font-size:10px;padding:3px 6px;border-radius:5px;border-left:2px solid;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;font-weight:500;}
-  .mini-card.ag{background:var(--status-ag-bg);border-color:var(--status-ag);color:var(--status-ag);}
-  .mini-card.em{background:var(--status-em-bg);border-color:var(--status-em);color:var(--status-em);}
-  .mini-card.ok{background:var(--status-ok-bg);border-color:var(--status-ok);color:var(--status-ok);}
-  .mini-card.at{background:var(--status-at-bg);border-color:var(--status-at);color:var(--status-at);}
-  .mini-card.mn{background:var(--status-mn-bg);border-color:var(--status-mn);color:var(--status-mn);}
-  .progress-bar{height:3px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden;}
-  .progress-fill{height:100%;border-radius:2px;transition:width .3s;}
+  .card.ps .card-badge{background:var(--status-ps);color:#fff;}
+  .card-type-badge{font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px;background:rgba(0,0,0,.07);color:var(--text2);}
+  .card-obs-icon{position:absolute;top:6px;right:6px;font-size:11px;opacity:.5;}
+  .progress-bar{height:2px;background:var(--border);border-radius:2px;margin-top:4px;overflow:hidden;}
+  .progress-fill{height:100%;border-radius:2px;}
   .card.ag .progress-fill{background:var(--status-ag);}
   .card.em .progress-fill{background:var(--status-em);}
   .card.ok .progress-fill{background:var(--status-ok);}
   .card.at .progress-fill{background:var(--status-at);}
   .card.mn .progress-fill{background:var(--status-mn);}
+  .card.ps .progress-fill{background:var(--status-ps);}
 
-  .tooltip{display:none;position:fixed;background:var(--text);color:#fff;border-radius:10px;padding:12px 14px;font-size:12px;max-width:240px;line-height:1.5;z-index:999;box-shadow:var(--shadow-lg);pointer-events:none;}
+  .mini-card{font-size:10px;padding:2px 5px;border-radius:4px;border-left:2px solid;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;font-weight:500;}
+  .mini-card.ag{background:var(--status-ag-bg);border-color:var(--status-ag);color:var(--status-ag);}
+  .mini-card.em{background:var(--status-em-bg);border-color:var(--status-em);color:var(--status-em);}
+  .mini-card.ok{background:var(--status-ok-bg);border-color:var(--status-ok);color:var(--status-ok);}
+  .mini-card.at{background:var(--status-at-bg);border-color:var(--status-at);color:var(--status-at);}
+  .mini-card.mn{background:var(--status-mn-bg);border-color:var(--status-mn);color:var(--status-mn);}
+  .mini-card.ps{background:var(--status-ps-bg);border-color:var(--status-ps);color:var(--status-ps);}
+
+  /* TOOLTIP */
+  .tooltip{display:none;position:fixed;background:var(--text);color:#fff;border-radius:10px;padding:10px 12px;font-size:12px;max-width:220px;line-height:1.5;z-index:999;box-shadow:var(--shadow-lg);pointer-events:none;}
   .tooltip.show{display:block;}
 
-  .overlay{display:none;position:fixed;inset:0;background:rgba(26,23,20,.4);backdrop-filter:blur(3px);z-index:200;align-items:center;justify-content:center;}
-  .overlay.show{display:flex;}
-  .modal{background:var(--surface);border-radius:16px;padding:28px;width:480px;max-width:95vw;box-shadow:var(--shadow-lg);animation:pop .2s cubic-bezier(.34,1.56,.64,1);}
-  @keyframes pop{from{transform:scale(.9) translateY(10px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
-  .modal-title{font-size:18px;font-weight:700;letter-spacing:-.3px;margin-bottom:20px;}
-  .form-group{margin-bottom:16px;}
-  label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
-  input,textarea,select{width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border);font-family:'Sora',sans-serif;font-size:13px;background:var(--bg);color:var(--text);transition:border .15s;outline:none;}
-  input:focus,textarea:focus,select:focus{border-color:var(--accent);background:#fff;}
-  textarea{resize:vertical;min-height:80px;}
-  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .modal-actions{display:flex;gap:10px;margin-top:20px;justify-content:flex-end;}
-  .btn-cancel{padding:9px 18px;border-radius:8px;border:1.5px solid var(--border);background:transparent;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);}
-  .btn-cancel:hover{background:var(--bg);}
-  .btn-save{padding:9px 22px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
-  .btn-save:hover{background:#b8450f;}
-  .btn-delete{padding:9px 16px;border-radius:8px;border:1.5px solid #dc2626;background:transparent;color:#dc2626;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;cursor:pointer;margin-right:auto;}
-  .btn-delete:hover{background:#fef2f2;}
-
-  .legend{display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
-  .legend-item{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--text2);}
+  /* LEGEND */
+  .legend{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .legend-item{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;color:var(--text2);}
   .legend-dot{width:8px;height:8px;border-radius:2px;}
-  .empty{text-align:center;padding:32px 16px;color:var(--text3);font-size:12px;}
-  .empty-icon{font-size:24px;margin-bottom:6px;}
+
+  .empty-day{text-align:center;padding:20px 8px;color:var(--text3);font-size:11px;}
+
   .counter-chip{background:var(--accent-light);color:var(--accent);border-radius:20px;padding:2px 8px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;}
 
-  @media(max-width:768px){
-    .week-grid{grid-template-columns:repeat(3,1fr);}
+  /* MODAL */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(26,23,20,.4);backdrop-filter:blur(3px);z-index:200;align-items:center;justify-content:center;}
+  .overlay.show{display:flex;}
+  .modal{background:var(--surface);border-radius:16px;padding:28px;width:500px;max-width:96vw;box-shadow:var(--shadow-lg);animation:pop .2s cubic-bezier(.34,1.56,.64,1);max-height:90vh;overflow-y:auto;}
+  @keyframes pop{from{transform:scale(.9) translateY(10px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+  .modal-title{font-size:17px;font-weight:700;letter-spacing:-.3px;margin-bottom:18px;}
+  .form-group{margin-bottom:14px;}
+  label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}
+  input,textarea,select{width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);font-family:'Sora',sans-serif;font-size:13px;background:var(--bg);color:var(--text);transition:border .15s;outline:none;}
+  input:focus,textarea:focus,select:focus{border-color:var(--accent);background:#fff;}
+  textarea{resize:vertical;min-height:70px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+  .modal-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end;}
+  .btn-cancel{padding:8px 16px;border-radius:8px;border:1.5px solid var(--border);background:transparent;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);}
+  .btn-cancel:hover{background:var(--bg);}
+  .btn-save{padding:8px 20px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+  .btn-save:hover{background:#b8450f;}
+  .btn-delete{padding:8px 14px;border-radius:8px;border:1.5px solid #dc2626;background:transparent;color:#dc2626;font-family:'Sora',sans-serif;font-size:13px;font-weight:500;cursor:pointer;margin-right:auto;}
+  .btn-delete:hover{background:#fef2f2;}
+
+  /* TYPE TOGGLE */
+  .type-toggle{display:flex;gap:6px;margin-bottom:14px;}
+  .type-btn{flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:transparent;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text2);}
+  .type-btn.active-inst{background:var(--accent-light);border-color:var(--accent);color:var(--accent);}
+  .type-btn.active-ps{background:#ecfeff;border-color:#0891b2;color:#0891b2;}
+
+  @media(max-width:900px){
+    .week-cols{grid-template-columns:repeat(4,1fr);}
     .year-grid{grid-template-columns:repeat(2,1fr);}
     header{padding:0 12px;}
     .logo span{display:none;}
@@ -180,6 +225,10 @@
     main{padding:12px;}
     .toolbar{padding:10px 12px;gap:8px;}
     .legend{display:none;}
+  }
+  @media(max-width:600px){
+    .week-cols{grid-template-columns:repeat(3,1fr);}
+    .form-row-3{grid-template-columns:1fr 1fr;}
   }
 </style>
 </head>
@@ -193,18 +242,23 @@
     <div style="width:56px;height:56px;background:var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 20px;">📌</div>
     <div style="font-size:18px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px;">CMT Agenda</div>
     <div style="font-size:12px;color:var(--text3);margin-bottom:24px;">Instalações e Manutenções</div>
-    <input type="password" id="loginInput" placeholder="Digite a senha" style="width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);font-family:Sora,sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none;text-align:center;letter-spacing:2px;margin-bottom:8px;" onkeydown="if(event.key==='Enter')doLogin()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+    <input type="password" id="loginInput" placeholder="Digite a senha"
+      style="width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);font-family:'Sora',sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none;text-align:center;letter-spacing:2px;margin-bottom:8px;"
+      onkeydown="if(event.key==='Enter')doLogin()"
+      onfocus="this.style.borderColor='var(--accent)'"
+      onblur="this.style.borderColor='var(--border)'">
     <div id="loginError" style="font-size:11px;color:#dc2626;margin-bottom:8px;min-height:16px;"></div>
-    <button onclick="doLogin()" style="width:100%;padding:12px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-family:Sora,sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Entrar</button>
+    <button onclick="doLogin()" style="width:100%;padding:12px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-family:'Sora',sans-serif;font-size:14px;font-weight:600;cursor:pointer;">Entrar</button>
   </div>
 </div>
 <script>
 function doLogin(){
-  var v=document.getElementById("loginInput").value;
-  if(v==="cmt2026"){document.getElementById("loginScreen").style.display="none";sessionStorage.setItem("cmt_auth","1");}
-  else{var e=document.getElementById("loginError");e.textContent="Senha incorreta.";document.getElementById("loginInput").value="";document.getElementById("loginInput").focus();setTimeout(function(){e.textContent="";},2500);}
+  var v=document.getElementById('loginInput').value;
+  if(v==='cmt2026'){document.getElementById('loginScreen').style.display='none';sessionStorage.setItem('cmt_auth','1');}
+  else{var e=document.getElementById('loginError');e.textContent='Senha incorreta.';document.getElementById('loginInput').value='';document.getElementById('loginInput').focus();setTimeout(function(){e.textContent='';},2500);}
 }
-if(sessionStorage.getItem("cmt_auth")==="1"){document.getElementById("loginScreen").style.display="none";}else{setTimeout(function(){document.getElementById("loginInput").focus();},200);}
+if(sessionStorage.getItem('cmt_auth')==='1'){document.getElementById('loginScreen').style.display='none';}
+else{setTimeout(function(){document.getElementById('loginInput').focus();},200);}
 </script>
 
 <div id="loadingScreen">
@@ -213,7 +267,6 @@ if(sessionStorage.getItem("cmt_auth")==="1"){document.getElementById("loginScree
   <div id="loadingText">Carregando agenda...</div>
 </div>
 
-<!-- ALERT BANNER -->
 <div id="alertBanner"></div>
 
 <div id="onlineChip" class="online">
@@ -232,7 +285,7 @@ if(sessionStorage.getItem("cmt_auth")==="1"){document.getElementById("loginScree
       <button class="view-tab" onclick="setView('month')">Mês</button>
       <button class="view-tab" onclick="setView('year')">Ano</button>
     </div>
-    <button class="btn-new" onclick="openNew()">&#xFF0B; Nova</button>
+    <button class="btn-new" onclick="openNew()">＋ Nova</button>
   </div>
 </header>
 
@@ -245,17 +298,20 @@ if(sessionStorage.getItem("cmt_auth")==="1"){document.getElementById("loginScree
     <div class="legend">
       <div class="legend-item"><div class="legend-dot" style="background:var(--status-ag)"></div>Agendado</div>
       <div class="legend-item"><div class="legend-dot" style="background:var(--status-em)"></div>Em andamento</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--status-ok)"></div>Concluido</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--status-ok)"></div>Concluído</div>
       <div class="legend-item"><div class="legend-dot" style="background:var(--status-at)"></div>Atrasado</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--status-mn)"></div>Manutencao</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--status-mn)"></div>Manutenção</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--status-ps)"></div>Pessoal</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#fca5a5;border-radius:50%"></div>Fim de semana/Feriado</div>
     </div>
     <select class="filter-select" id="filterStatus" onchange="render()">
       <option value="">Todos</option>
       <option value="ag">Agendado</option>
       <option value="em">Em andamento</option>
-      <option value="ok">Concluido</option>
+      <option value="ok">Concluído</option>
       <option value="at">Atrasado</option>
-      <option value="mn">Manutencao</option>
+      <option value="mn">Manutenção</option>
+      <option value="ps">Pessoal</option>
     </select>
   </div>
 </div>
@@ -263,33 +319,57 @@ if(sessionStorage.getItem("cmt_auth")==="1"){document.getElementById("loginScree
 <main id="mainContent"></main>
 <div class="tooltip" id="tooltip"></div>
 
+<!-- MODAL -->
 <div class="overlay" id="overlay">
   <div class="modal">
-    <div class="modal-title" id="modalTitle">Nova Instalacao</div>
+    <div class="modal-title" id="modalTitle">Nova Entrada</div>
+
+    <div class="type-toggle">
+      <button class="type-btn active-inst" id="btnTipoInst" onclick="setTipo('inst')">📌 Instalação / Serviço</button>
+      <button class="type-btn" id="btnTipoPs" onclick="setTipo('ps')">🏠 Tarefa Pessoal</button>
+    </div>
+
     <div class="form-group">
-      <label>Cliente / Instalacao</label>
+      <label id="labelNome">Cliente / Instalação</label>
       <input type="text" id="fNome" placeholder="Ex: Fachada Loja Centro">
     </div>
+
     <div class="form-row">
-      <div class="form-group"><label>Data Inicio</label><input type="date" id="fInicio"></div>
-      <div class="form-group"><label>Data Termino</label><input type="date" id="fFim"></div>
+      <div class="form-group"><label>Data Início</label><input type="date" id="fInicio"></div>
+      <div class="form-group"><label>Data Término</label><input type="date" id="fFim"></div>
     </div>
-    <div class="form-group">
+
+    <div class="form-row">
+      <div class="form-group"><label>Horário Início</label>
+        <select id="fHoraInicio">
+          <option value="">Sem horário</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Horário Término</label>
+        <select id="fHoraFim">
+          <option value="">Sem horário</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" id="groupStatus">
       <label>Status</label>
       <select id="fStatus">
         <option value="ag">Agendado</option>
         <option value="em">Em andamento</option>
-        <option value="ok">Concluido</option>
+        <option value="ok">Concluído</option>
         <option value="at">Atrasado</option>
-        <option value="mn">Manutencao</option>
+        <option value="mn">Manutenção</option>
       </select>
     </div>
+
     <div class="form-group">
-      <label>Observacao</label>
+      <label>Observação 💬</label>
       <textarea id="fObs" placeholder="Detalhes, materiais, contato..."></textarea>
     </div>
+
     <div class="modal-actions">
-      <button class="btn-delete" id="btnDelete" style="display:none" onclick="deleteItem()">Excluir</button>
+      <button class="btn-delete" id="btnDelete" style="display:none" onclick="deleteItem()">🗑 Excluir</button>
       <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
       <button class="btn-save" onclick="saveItem()">Salvar</button>
     </div>
@@ -312,21 +392,115 @@ const firebaseConfig = {
 
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
-enableIndexedDbPersistence(db).catch(e => console.warn('Persist:', e.code));
+enableIndexedDbPersistence(db).catch(e=>console.warn('Persist:',e.code));
 
-// online indicator
-function setOnline(v){
-  const c=document.getElementById('onlineChip');
-  document.getElementById('onlineText').textContent=v?'Online':'Offline';
-  c.className=v?'online':'offline';
-}
+// online
+function setOnline(v){const c=document.getElementById('onlineChip');document.getElementById('onlineText').textContent=v?'Online':'Offline';c.className=v?'online':'offline';}
 window.addEventListener('online',()=>setOnline(true));
 window.addEventListener('offline',()=>setOnline(false));
 setOnline(navigator.onLine);
 
-// sync bar
 function syncStart(){document.getElementById('syncBar').classList.add('show');document.getElementById('syncFill').style.width='70%';}
 function syncEnd(){document.getElementById('syncFill').style.width='100%';setTimeout(()=>{document.getElementById('syncBar').classList.remove('show');document.getElementById('syncFill').style.width='0%';},400);}
+
+// ── FERIADOS NACIONAIS — CÁLCULO AUTOMÁTICO PARA QUALQUER ANO ──
+
+// Algoritmo de Meeus/Jones/Butcher para calcular a Páscoa
+function calcPascoa(y){
+  const a=y%19, b=Math.floor(y/100), c=y%100;
+  const d=Math.floor(b/4), e=b%4, f=Math.floor((b+8)/25);
+  const g=Math.floor((b-f+1)/3), h=(19*a+b-d-g+15)%30;
+  const i=Math.floor(c/4), k=c%4, l=(32+2*e+2*i-h-k)%7;
+  const m=Math.floor((a+11*h+22*l)/451);
+  const month=Math.floor((h+l-7*m+114)/31);
+  const day=((h+l-7*m+114)%31)+1;
+  return new Date(y, month-1, day);
+}
+
+function addD(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
+function iso(d){return d.toISOString().slice(0,10);}
+
+function buildFeriados(y){
+  const pascoa = calcPascoa(y);
+  const sextaSanta = addD(pascoa,-2);       // Sexta-feira Santa
+  const carnaval1  = addD(pascoa,-48);      // Segunda de Carnaval
+  const carnaval2  = addD(pascoa,-47);      // Terça de Carnaval
+  const corpusChristi = addD(pascoa,60);    // Corpus Christi
+
+  const f = new Set([
+    `${y}-01-01`,   // Ano Novo
+    iso(carnaval1), // Carnaval seg
+    iso(carnaval2), // Carnaval ter
+    iso(sextaSanta),// Sexta Santa
+    iso(pascoa),    // Páscoa
+    `${y}-04-21`,   // Tiradentes
+    `${y}-05-01`,   // Dia do Trabalho
+    iso(corpusChristi), // Corpus Christi
+    `${y}-09-07`,   // Independência
+    `${y}-10-12`,   // N.Sra.Aparecida
+    `${y}-11-02`,   // Finados
+    `${y}-11-15`,   // Proclamação da República
+    `${y}-11-20`,   // Consciência Negra
+    `${y}-12-25`,   // Natal
+  ]);
+  return f;
+}
+
+// Cache para não recalcular toda hora
+const _feriadosCache = {};
+function getFeriados(y){
+  if(!_feriadosCache[y]) _feriadosCache[y] = buildFeriados(y);
+  return _feriadosCache[y];
+}
+
+const FERIADOS_NOMES_FIXOS = {
+  '01-01':'Ano Novo','04-21':'Tiradentes','05-01':'Dia do Trabalho',
+  '09-07':'Independência','10-12':'N.Sra.Aparecida','11-02':'Finados',
+  '11-15':'Proclamação','11-20':'Consciência Negra','12-25':'Natal'
+};
+function getFeriadoNome(dateStr){
+  const y = parseInt(dateStr.slice(0,4));
+  const pascoa = calcPascoa(y);
+  const checks = {
+    [iso(addD(pascoa,-48))]:'Carnaval',
+    [iso(addD(pascoa,-47))]:'Carnaval',
+    [iso(addD(pascoa,-2))]:'Sexta Santa',
+    [iso(pascoa)]:'Páscoa',
+    [iso(addD(pascoa,60))]:'Corpus Christi',
+  };
+  return checks[dateStr] || FERIADOS_NOMES_FIXOS[dateStr.slice(5)] || 'Feriado';
+}
+
+function isFeriado(d){
+  const s=isoDate(d);
+  return getFeriados(d.getFullYear()).has(s);
+}
+function isWeekend(d){return d.getDay()===0||d.getDay()===6;}
+function isDiaEspecial(d){return isWeekend(d)||isFeriado(d);}
+
+// ── HORÁRIOS ──
+const HORAS = [];
+for(let h=6;h<=22;h++) HORAS.push(`${String(h).padStart(2,'0')}:00`);
+
+function populateHoras(){
+  ['fHoraInicio','fHoraFim'].forEach(id=>{
+    const sel=document.getElementById(id);
+    sel.innerHTML='<option value="">Sem horário</option>';
+    HORAS.forEach(h=>{const o=document.createElement('option');o.value=h;o.textContent=h;sel.appendChild(o);});
+  });
+}
+populateHoras();
+
+// ── TIPO (instalação vs pessoal) ──
+window._tipo = 'inst';
+window.setTipo = function(t){
+  window._tipo = t;
+  document.getElementById('btnTipoInst').className='type-btn'+(t==='inst'?' active-inst':'');
+  document.getElementById('btnTipoPs').className='type-btn'+(t==='ps'?' active-ps':'');
+  document.getElementById('groupStatus').style.display = t==='ps'?'none':'block';
+  document.getElementById('labelNome').textContent = t==='ps'?'Descrição da tarefa':'Cliente / Instalação';
+  document.getElementById('fNome').placeholder = t==='ps'?'Ex: Reunião, médico, banco...':'Ex: Fachada Loja Centro';
+};
 
 // data
 window._items=[];
@@ -335,14 +509,14 @@ window._currentView='week';
 window._currentDate=new Date();
 
 const colRef=collection(db,'instalacoes');
-onSnapshot(colRef, snap=>{
+onSnapshot(colRef,snap=>{
   window._items=snap.docs.map(d=>({id:d.id,...d.data()}));
   document.getElementById('loadingScreen').classList.add('hide');
   checkAlerts();
   render();
-}, err=>{
+},err=>{
   console.error(err);
-  document.getElementById('loadingText').textContent='Erro ao carregar. Verifique a conexao.';
+  document.getElementById('loadingText').textContent='Erro ao carregar. Verifique a conexão.';
 });
 
 // utils
@@ -353,7 +527,7 @@ function isoDate(d){return d.toISOString().slice(0,10);}
 function startOfWeek(d){const r=new Date(d);r.setHours(0,0,0,0);r.setDate(r.getDate()-r.getDay());return r;}
 function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
 function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
-function statusLabel(s){return{ag:'Agendado',em:'Em andamento',ok:'Concluido',at:'Atrasado',mn:'Manutencao'}[s]||s;}
+function statusLabel(s){return{ag:'Agendado',em:'Em andamento',ok:'Concluído',at:'Atrasado',mn:'Manutenção',ps:'Pessoal'}[s]||s;}
 function calcProgress(it){
   const s=parseDate(it.inicio),e=parseDate(it.fim);
   if(!s||!e)return 0;
@@ -371,100 +545,37 @@ function itemsOnDay(day){
   });
 }
 
-// ── ALERTAS DE VENCIMENTO ──
+// ── ALERTAS ──
 function checkAlerts(){
-  const amanha = addDays(today, 1);
-  const banner = document.getElementById('alertBanner');
-  banner.innerHTML = '';
-
-  const vencendoHoje = window._items.filter(it => {
-    if(it.status==='ok') return false;
-    const fim = parseDate(it.fim);
-    return fim && sameDay(fim, today);
-  });
-
-  const vencendoAmanha = window._items.filter(it => {
-    if(it.status==='ok') return false;
-    const fim = parseDate(it.fim);
-    return fim && sameDay(fim, amanha);
-  });
-
-  let html = '';
-
-  vencendoHoje.forEach(it => {
-    html += `<div class="alert-card vencido">
-      <span class="alert-icon">🚨</span>
-      <div class="alert-body">
-        <div class="alert-title">VENCE HOJE!</div>
-        <div class="alert-text">${it.nome} — prazo termina hoje</div>
-      </div>
-      <button class="alert-action" onclick="openEdit('${it.id}')">Ver</button>
-      <button class="alert-close" onclick="this.closest('.alert-card').remove();checkBannerVisibility()">&#x2715;</button>
-    </div>`;
-  });
-
-  vencendoAmanha.forEach(it => {
-    html += `<div class="alert-card">
-      <span class="alert-icon">⏰</span>
-      <div class="alert-body">
-        <div class="alert-title">Vence amanha</div>
-        <div class="alert-text">${it.nome} — prazo termina amanha (${fmtDate(addDays(today,1))})</div>
-      </div>
-      <button class="alert-action" onclick="openEdit('${it.id}')">Ver</button>
-      <button class="alert-close" onclick="this.closest('.alert-card').remove();checkBannerVisibility()">&#x2715;</button>
-    </div>`;
-  });
-
-  if(html){
-    banner.innerHTML = html;
-    banner.classList.add('show');
-    // notificação do navegador
-    requestAndNotify(vencendoHoje, vencendoAmanha);
-  } else {
-    banner.classList.remove('show');
-  }
+  const amanha=addDays(today,1);
+  const banner=document.getElementById('alertBanner');
+  banner.innerHTML='';
+  const vHoje=window._items.filter(it=>it.status!=='ok'&&it.tipo!=='ps'&&parseDate(it.fim)&&sameDay(parseDate(it.fim),today));
+  const vAmanha=window._items.filter(it=>it.status!=='ok'&&it.tipo!=='ps'&&parseDate(it.fim)&&sameDay(parseDate(it.fim),amanha));
+  let html='';
+  vHoje.forEach(it=>{html+=`<div class="alert-card vencido"><div class="alert-body"><div class="alert-title">🚨 VENCE HOJE!</div><div class="alert-text">${it.nome}</div></div><button class="alert-action" onclick="openEdit('${it.id}')">Ver</button><button class="alert-close" onclick="this.closest('.alert-card').remove()">✕</button></div>`;});
+  vAmanha.forEach(it=>{html+=`<div class="alert-card"><div class="alert-body"><div class="alert-title">⏰ Vence amanhã</div><div class="alert-text">${it.nome} — ${fmtDate(amanha)}</div></div><button class="alert-action" onclick="openEdit('${it.id}')">Ver</button><button class="alert-close" onclick="this.closest('.alert-card').remove()">✕</button></div>`;});
+  if(html){banner.innerHTML=html;banner.classList.add('show');requestAndNotify(vHoje,vAmanha);}
+  else banner.classList.remove('show');
+}
+async function requestAndNotify(hoje,amanha){
+  if(!('Notification' in window)||Notification.permission==='denied')return;
+  if(Notification.permission!=='granted') await Notification.requestPermission();
+  if(Notification.permission!=='granted')return;
+  hoje.forEach(it=>new Notification('CMT Agenda — Vence HOJE!',{body:it.nome+' tem prazo hoje.',tag:'v-'+it.id}));
+  amanha.forEach(it=>new Notification('CMT Agenda — Vence amanhã',{body:it.nome+' tem prazo amanhã.',tag:'v-'+it.id}));
 }
 
-window.checkBannerVisibility = function(){
-  const banner = document.getElementById('alertBanner');
-  if(!banner.querySelector('.alert-card')) banner.classList.remove('show');
-};
-
-// notificação do navegador (push nativo)
-async function requestAndNotify(hoje, amanha){
-  if(!('Notification' in window)) return;
-  if(Notification.permission === 'denied') return;
-
-  if(Notification.permission !== 'granted'){
-    await Notification.requestPermission();
-  }
-
-  if(Notification.permission !== 'granted') return;
-
-  hoje.forEach(it => {
-    new Notification('CMT Agenda — Vence HOJE!', {
-      body: it.nome + ' tem prazo de termino hoje.',
-      icon: 'https://raw.githubusercontent.com/google/material-design-icons/master/png/action/event/materialicons/48dp/1x/baseline_event_black_48dp.png',
-      tag: 'vence-' + it.id
-    });
-  });
-
-  amanha.forEach(it => {
-    new Notification('CMT Agenda — Vence amanha', {
-      body: it.nome + ' tem prazo de termino amanha.',
-      icon: 'https://raw.githubusercontent.com/google/material-design-icons/master/png/action/event/materialicons/48dp/1x/baseline_event_black_48dp.png',
-      tag: 'vence-' + it.id
-    });
-  });
-}
-
-// modal
-window.openNew=function(defaultDate){
+// ── MODAL ──
+window.openNew=function(defaultDate,defaultHora){
   window._editingId=null;
-  document.getElementById('modalTitle').textContent='Nova Instalacao';
+  window.setTipo('inst');
+  document.getElementById('modalTitle').textContent='Nova Entrada';
   document.getElementById('fNome').value='';
   document.getElementById('fInicio').value=defaultDate||isoDate(today);
   document.getElementById('fFim').value=defaultDate||isoDate(today);
+  document.getElementById('fHoraInicio').value=defaultHora||'';
+  document.getElementById('fHoraFim').value='';
   document.getElementById('fStatus').value='ag';
   document.getElementById('fObs').value='';
   document.getElementById('btnDelete').style.display='none';
@@ -473,21 +584,34 @@ window.openNew=function(defaultDate){
 window.openEdit=function(id){
   const it=window._items.find(x=>x.id===id);if(!it)return;
   window._editingId=id;
-  document.getElementById('modalTitle').textContent='Editar Instalacao';
+  window.setTipo(it.tipo||'inst');
+  document.getElementById('modalTitle').textContent='Editar';
   document.getElementById('fNome').value=it.nome||'';
   document.getElementById('fInicio').value=it.inicio||'';
   document.getElementById('fFim').value=it.fim||'';
+  document.getElementById('fHoraInicio').value=it.horaInicio||'';
+  document.getElementById('fHoraFim').value=it.horaFim||'';
   document.getElementById('fStatus').value=it.status||'ag';
   document.getElementById('fObs').value=it.obs||'';
   document.getElementById('btnDelete').style.display='inline-block';
   document.getElementById('overlay').classList.add('show');
 };
 window.closeModal=function(){document.getElementById('overlay').classList.remove('show');};
+
 window.saveItem=async function(){
   const nome=document.getElementById('fNome').value.trim();
   if(!nome){document.getElementById('fNome').focus();return;}
-  const data={nome,inicio:document.getElementById('fInicio').value,fim:document.getElementById('fFim').value,
-    status:document.getElementById('fStatus').value,obs:document.getElementById('fObs').value.trim(),updatedAt:Date.now()};
+  const tipo=window._tipo;
+  const data={
+    nome,tipo,
+    inicio:document.getElementById('fInicio').value,
+    fim:document.getElementById('fFim').value,
+    horaInicio:document.getElementById('fHoraInicio').value,
+    horaFim:document.getElementById('fHoraFim').value,
+    status:tipo==='ps'?'ps':document.getElementById('fStatus').value,
+    obs:document.getElementById('fObs').value.trim(),
+    updatedAt:Date.now()
+  };
   syncStart();
   try{
     if(window._editingId) await updateDoc(doc(db,'instalacoes',window._editingId),data);
@@ -496,7 +620,7 @@ window.saveItem=async function(){
   syncEnd();closeModal();
 };
 window.deleteItem=async function(){
-  if(!confirm('Excluir esta instalacao?'))return;
+  if(!confirm('Excluir?'))return;
   syncStart();
   try{await deleteDoc(doc(db,'instalacoes',window._editingId));}catch(e){console.error(e);}
   syncEnd();closeModal();
@@ -504,7 +628,7 @@ window.deleteItem=async function(){
 
 // tooltip
 window.showTip=function(e,text){const t=document.getElementById('tooltip');t.textContent=text;t.classList.add('show');moveTip(e);};
-function moveTip(e){const t=document.getElementById('tooltip');let x=e.clientX+12,y=e.clientY-t.offsetHeight-14;if(x+250>window.innerWidth)x=e.clientX-254;if(y<0)y=e.clientY+14;t.style.left=x+'px';t.style.top=y+'px';}
+function moveTip(e){const t=document.getElementById('tooltip');let x=e.clientX+12,y=e.clientY-t.offsetHeight-14;if(x+240>window.innerWidth)x=e.clientX-244;if(y<0)y=e.clientY+14;t.style.left=x+'px';t.style.top=y+'px';}
 window.hideTip=function(){document.getElementById('tooltip').classList.remove('show');};
 document.addEventListener('mousemove',e=>{if(document.getElementById('tooltip').classList.contains('show'))moveTip(e);});
 
@@ -523,21 +647,31 @@ window.navigate=function(dir){
 };
 window.goToday=function(){window._currentDate=new Date();render();};
 
-// render
+// ── MAKE CARD ──
 function makeCard(it,mini=false){
-  const prog=calcProgress(it),hasObs=it.obs&&it.obs.trim();
+  const prog=calcProgress(it);
+  const hasObs=it.obs&&it.obs.trim();
   const obs=hasObs?it.obs.replace(/'/g,'').replace(/"/g,''):'';
   const tipAttr=hasObs?`onmouseenter="showTip(event,'${obs}')" onmouseleave="hideTip()"`:'';
-  if(mini)return`<div class="mini-card ${it.status}" onclick="event.stopPropagation();openEdit('${it.id}')" ${tipAttr}>${it.nome}</div>`;
-  return`<div class="card ${it.status}" onclick="openEdit('${it.id}')" ${tipAttr}>
-    ${hasObs?'<span class="card-obs-icon">&#128172;</span>':''}
-    <div class="card-name">${it.nome}</div>
-    <div class="card-date">${it.inicio?fmtDate(parseDate(it.inicio)):''}${it.fim&&it.fim!==it.inicio?' &rarr; '+fmtDate(parseDate(it.fim)):''}</div>
-    <span class="card-badge">${statusLabel(it.status)}</span>
-    <div class="progress-bar"><div class="progress-fill" style="width:${prog}%"></div></div>
+  const horaStr=(it.horaInicio?it.horaInicio:'')+(it.horaInicio&&it.horaFim?' → '+it.horaFim:'');
+  const isPessoal=it.tipo==='ps';
+  const statusClass=isPessoal?'ps':(it.status||'ag');
+
+  if(mini)return`<div class="mini-card ${statusClass}" onclick="event.stopPropagation();openEdit('${it.id}')" ${tipAttr}>${isPessoal?'🏠 ':''} ${it.nome}</div>`;
+
+  return`<div class="card ${statusClass}" onclick="openEdit('${it.id}')" ${tipAttr}>
+    ${hasObs?'<span class="card-obs-icon">💬</span>':''}
+    <div class="card-name">${isPessoal?'🏠 ':''} ${it.nome}</div>
+    ${horaStr?`<div class="card-time">⏰ ${horaStr}</div>`:''}
+    <div class="card-meta">
+      <span class="card-badge">${statusLabel(statusClass)}</span>
+      ${isPessoal?'<span class="card-type-badge">Pessoal</span>':''}
+    </div>
+    ${!isPessoal?`<div class="progress-bar"><div class="progress-fill" style="width:${prog}%"></div></div>`:''}
   </div>`;
 }
 
+// ── RENDER ──
 window.render=function(){
   if(window._currentView==='week') renderWeek();
   else if(window._currentView==='month') renderMonth();
@@ -547,32 +681,74 @@ window.render=function(){
 function renderWeek(){
   const sw=startOfWeek(window._currentDate);
   const days=Array.from({length:7},(_,i)=>addDays(sw,i));
-  document.getElementById('periodLabel').textContent=`${fmtDate(days[0])} - ${fmtDate(days[6])}`;
-  const dn=['Dom','Seg','Ter','Qua','Qui','Sex','Sab'];
-  let h='<div class="week-grid">';
+  document.getElementById('periodLabel').textContent=`${fmtDate(days[0])} — ${fmtDate(days[6])}`;
+  const dn=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+
+  let h='<div class="week-wrapper">';
+
+  // coluna de horas
+  h+='<div class="time-col"><div class="time-col-header"></div>';
+  HORAS.forEach(hr=>h+=`<div class="time-slot-label">${hr}</div>`);
+  h+='</div>';
+
+  // colunas dos dias
+  h+='<div class="week-cols">';
   days.forEach((day,i)=>{
-    const isT=sameDay(day,today),di=itemsOnDay(day);
-    h+=`<div class="day-col${isT?' today':''}"><div class="day-header"><div class="day-name">${dn[i]}</div><div class="day-num">${day.getDate()}</div></div><div class="day-cards" onclick="openNew('${isoDate(day)}')">`;
-    if(di.length)di.forEach(it=>h+=makeCard(it));
-    else h+=`<div class="empty"><div class="empty-icon">+</div>clique para adicionar</div>`;
+    const isT=sameDay(day,today);
+    const isWE=isWeekend(day);
+    const isFer=isFeriado(day);
+    const ferNome=isFer?getFeriadoNome(isoDate(day)):'';
+    const cls=['day-col',isT?'today':'',isWE?'weekend':'',isFer?'feriado':''].filter(Boolean).join(' ');
+    const di=itemsOnDay(day);
+
+    h+=`<div class="${cls}">
+      <div class="day-header">
+        <div class="day-name">${dn[i]}</div>
+        <div class="day-num">${day.getDate()}</div>
+        ${isFer?`<div class="feriado-label">${ferNome}</div>`:isWE?`<div class="feriado-label">${i===0?'Domingo':'Sábado'}</div>`:''}
+      </div>
+      <div class="day-slots">`;
+
+    // slots de hora (clicáveis)
+    HORAS.forEach(hr=>{
+      h+=`<div class="hour-slot" onclick="openNew('${isoDate(day)}','${hr}')"></div>`;
+    });
+
+    // cards sobrepostos
+    h+=`<div class="day-cards-overlay" style="position:absolute;top:0;left:0;right:0;padding:4px;display:flex;flex-direction:column;gap:4px;pointer-events:none;">`;
+    di.forEach(it=>h+=`<div style="pointer-events:all;">${makeCard(it)}</div>`);
+    if(!di.length) h+=`<div class="empty-day">clique num horário para adicionar</div>`;
+    h+=`</div>`;
+
     h+=`</div></div>`;
   });
-  h+='</div>';
+
+  h+='</div></div>';
   document.getElementById('mainContent').innerHTML=h;
+
+  // ajusta posição relativa dos slots
+  document.querySelectorAll('.day-slots').forEach(el=>el.style.position='relative');
 }
 
 function renderMonth(){
   const y=window._currentDate.getFullYear(),m=window._currentDate.getMonth();
-  const mn=['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const mn=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   document.getElementById('periodLabel').textContent=`${mn[m]} ${y}`;
   const first=new Date(y,m,1),last=new Date(y,m+1,0),sp=first.getDay();
-  const dn=['Dom','Seg','Ter','Qua','Qui','Sex','Sab'];
+  const dn=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
   let h='<div class="month-grid">';
   dn.forEach(d=>h+=`<div class="month-day-header">${d}</div>`);
   for(let i=0;i<sp;i++){const d=new Date(y,m,-sp+i+1);h+=`<div class="month-cell other-month"><div class="month-cell-num">${d.getDate()}</div></div>`;}
   for(let d=1;d<=last.getDate();d++){
     const day=new Date(y,m,d),isT=sameDay(day,today),di=itemsOnDay(day);
-    h+=`<div class="month-cell${isT?' today':''}" onclick="openNew('${isoDate(day)}')"><div class="month-cell-num">${isT?'<span class="today-dot"></span>':''}${d}</div>`;
+    const isWE=isWeekend(day),isFer=isFeriado(day);
+    const ferNome=isFer?getFeriadoNome(isoDate(day)):'';
+    const cls=['month-cell',isT?'today':'',isWE?'weekend':'',isFer?'feriado':''].filter(Boolean).join(' ');
+    h+=`<div class="${cls}" onclick="openNew('${isoDate(day)}')">
+      <div class="month-cell-num">
+        ${isT?'<span class="today-dot"></span>':''}${d}
+        ${isFer?`<span class="feriado-tag">${ferNome}</span>`:isWE&&!isT?`<span class="feriado-tag">${day.getDay()===0?'Dom':'Sáb'}</span>`:''}
+      </div>`;
     di.slice(0,3).forEach(it=>h+=makeCard(it,true));
     if(di.length>3)h+=`<div class="mini-card" style="background:var(--bg);border:none;color:var(--text3)">+${di.length-3} mais</div>`;
     h+=`</div>`;
@@ -586,7 +762,7 @@ function renderMonth(){
 function renderYear(){
   const y=window._currentDate.getFullYear();
   document.getElementById('periodLabel').textContent=`${y}`;
-  const fn=['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const fn=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   const dn2=['D','S','T','Q','Q','S','S'];
   const filter=document.getElementById('filterStatus')?.value||'';
   let h='<div class="year-grid">';
@@ -598,12 +774,15 @@ function renderYear(){
       if(!s)return false;
       return(s.getFullYear()===y&&s.getMonth()===m)||(e&&e.getFullYear()===y&&e.getMonth()===m);
     }).length;
-    h+=`<div class="mini-month"><div class="mini-month-title" style="display:flex;justify-content:space-between;align-items:center">${fn[m]}${ec?`<span class="counter-chip">${ec}</span>`:''}</div><div class="mini-month-grid">`;
+    h+=`<div class="mini-month"><div class="mini-month-title">${fn[m]}${ec?`<span class="counter-chip">${ec}</span>`:''}</div><div class="mini-month-grid">`;
     dn2.forEach(d=>h+=`<div class="mini-day-name">${d}</div>`);
     for(let i=0;i<sp;i++)h+=`<div></div>`;
     for(let d=1;d<=last.getDate();d++){
       const day=new Date(y,m,d),isT=sameDay(day,today),hasEv=itemsOnDay(day).length>0;
-      h+=`<div class="mini-day${isT?' today-mini':''}${hasEv&&!isT?' has-event':''}${!isT?' other':''}" onclick="window._currentDate=new Date(${y},${m},${d});setView('week')" title="${fmtDate(day)}">${d}</div>`;
+      const isWE=isWeekend(day)||isFeriado(day);
+      h+=`<div class="mini-day${isT?' today-mini':''}${hasEv&&!isT?' has-event':''}${isWE&&!isT?' weekend-mini':''}"
+        onclick="window._currentDate=new Date(${y},${m},${d});setView('week')"
+        title="${fmtDate(day)}">${d}</div>`;
     }
     h+=`</div></div>`;
   }
@@ -614,7 +793,7 @@ function renderYear(){
 document.getElementById('overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
 // PWA manifest
-const manifest={name:"CMT Agenda de Instalacoes",short_name:"CMT Agenda",start_url:"./index.html",display:"standalone",background_color:"#f0ede8",theme_color:"#d4541a"};
+const manifest={name:"CMT Agenda",short_name:"CMT Agenda",start_url:"./index.html",display:"standalone",background_color:"#f0ede8",theme_color:"#d4541a"};
 const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
 document.getElementById('manifestLink').href=URL.createObjectURL(blob);
 </script>
