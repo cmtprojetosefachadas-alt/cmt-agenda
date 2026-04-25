@@ -190,7 +190,7 @@
 <!-- LOGIN -->
 <div id="loginScreen" style="position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:99999;">
   <div style="background:#fff;border-radius:20px;padding:40px 36px;width:340px;max-width:92vw;box-shadow:0 8px 40px rgba(0,0,0,.12);text-align:center;">
-    <div style="width:56px;height:56px;background:var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 20px;"><div id="syncBar"><div id="syncFill"></div></div>#128204;</div>
+    <div style="width:56px;height:56px;background:var(--accent);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 20px;">📌</div>
     <div style="font-size:18px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px;">CMT Agenda</div>
     <div style="font-size:12px;color:var(--text3);margin-bottom:24px;">Instalações e Manutenções</div>
     <input type="password" id="loginInput" placeholder="Digite a senha" style="width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);font-family:Sora,sans-serif;font-size:14px;background:var(--bg);color:var(--text);outline:none;text-align:center;letter-spacing:2px;margin-bottom:8px;" onkeydown="if(event.key==='Enter')doLogin()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
@@ -208,7 +208,7 @@ if(sessionStorage.getItem("cmt_auth")==="1"){document.getElementById("loginScree
 </script>
 
 <div id="loadingScreen">
-  <div style="width:48px;height:48px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;">&#128204;</div>
+  <div style="width:48px;height:48px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;">📌</div>
   <div class="spinner"></div>
   <div id="loadingText">Carregando agenda...</div>
 </div>
@@ -223,7 +223,7 @@ if(sessionStorage.getItem("cmt_auth")==="1"){document.getElementById("loginScree
 
 <header>
   <div class="logo">
-    <div class="logo-icon">&#128204;</div>
+    <div class="logo-icon">📌</div>
     CMT Agenda <span>&nbsp;/ Instalações</span>
   </div>
   <div class="header-right">
