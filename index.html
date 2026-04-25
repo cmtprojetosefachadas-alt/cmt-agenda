@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CMT — Agenda de Instalações</title>
 <meta name="theme-color" content="#d4541a">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="CMT Agenda">
@@ -43,6 +44,21 @@
   .spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg)}}
   #loadingText{font-size:13px;font-weight:500;color:var(--text3);}
+
+  /* ALERT BANNER */
+  #alertBanner{display:none;position:fixed;top:60px;left:0;right:0;z-index:400;padding:8px 16px;pointer-events:none;}
+  #alertBanner.show{display:block;}
+  .alert-card{background:#fffbeb;border:1.5px solid #f59e0b;border-radius:12px;padding:12px 16px;margin:4px auto;max-width:640px;box-shadow:var(--shadow-lg);pointer-events:all;display:flex;align-items:center;gap:12px;animation:slideDown .3s ease;}
+  .alert-card.vencido{background:#fef2f2;border-color:#ef4444;}
+  @keyframes slideDown{from{transform:translateY(-8px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .alert-icon{font-size:18px;flex-shrink:0;}
+  .alert-body{flex:1;}
+  .alert-title{font-size:12px;font-weight:700;color:#92400e;margin-bottom:1px;}
+  .alert-card.vencido .alert-title{color:#991b1b;}
+  .alert-text{font-size:11px;color:var(--text2);line-height:1.4;}
+  .alert-close{background:none;border:none;font-size:14px;cursor:pointer;color:var(--text3);padding:0 2px;}
+  .alert-close:hover{color:var(--text);}
+  .alert-action{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:5px 10px;font-family:'Sora',sans-serif;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;}
 
   header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--border);}
   .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:-.3px;}
@@ -172,10 +188,13 @@
 <div id="syncBar"><div id="syncFill"></div></div>
 
 <div id="loadingScreen">
-  <div style="width:48px;height:48px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;">📌</div>
+  <div style="width:48px;height:48px;background:var(--accent);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;">&#128204;</div>
   <div class="spinner"></div>
   <div id="loadingText">Carregando agenda...</div>
 </div>
+
+<!-- ALERT BANNER -->
+<div id="alertBanner"></div>
 
 <div id="onlineChip" class="online">
   <div id="onlineDot"></div>
@@ -184,7 +203,7 @@
 
 <header>
   <div class="logo">
-    <div class="logo-icon">📌</div>
+    <div class="logo-icon">&#128204;</div>
     CMT Agenda <span>&nbsp;/ Instalações</span>
   </div>
   <div class="header-right">
@@ -193,7 +212,7 @@
       <button class="view-tab" onclick="setView('month')">Mês</button>
       <button class="view-tab" onclick="setView('year')">Ano</button>
     </div>
-    <button class="btn-new" onclick="openNew()">＋ Nova</button>
+    <button class="btn-new" onclick="openNew()">&#xFF0B; Nova</button>
   </div>
 </header>
 
@@ -273,31 +292,21 @@ const firebaseConfig = {
 
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
-
 enableIndexedDbPersistence(db).catch(e => console.warn('Persist:', e.code));
 
 // online indicator
-function setOnline(v) {
+function setOnline(v){
   const c=document.getElementById('onlineChip');
-  document.getElementById('onlineText').textContent = v ? 'Online' : 'Offline';
-  c.className = v ? 'online' : 'offline';
+  document.getElementById('onlineText').textContent=v?'Online':'Offline';
+  c.className=v?'online':'offline';
 }
-window.addEventListener('online', ()=>setOnline(true));
-window.addEventListener('offline', ()=>setOnline(false));
+window.addEventListener('online',()=>setOnline(true));
+window.addEventListener('offline',()=>setOnline(false));
 setOnline(navigator.onLine);
 
 // sync bar
-function syncStart(){
-  document.getElementById('syncBar').classList.add('show');
-  document.getElementById('syncFill').style.width='70%';
-}
-function syncEnd(){
-  document.getElementById('syncFill').style.width='100%';
-  setTimeout(()=>{
-    document.getElementById('syncBar').classList.remove('show');
-    document.getElementById('syncFill').style.width='0%';
-  },400);
-}
+function syncStart(){document.getElementById('syncBar').classList.add('show');document.getElementById('syncFill').style.width='70%';}
+function syncEnd(){document.getElementById('syncFill').style.width='100%';setTimeout(()=>{document.getElementById('syncBar').classList.remove('show');document.getElementById('syncFill').style.width='0%';},400);}
 
 // data
 window._items=[];
@@ -309,6 +318,7 @@ const colRef=collection(db,'instalacoes');
 onSnapshot(colRef, snap=>{
   window._items=snap.docs.map(d=>({id:d.id,...d.data()}));
   document.getElementById('loadingScreen').classList.add('hide');
+  checkAlerts();
   render();
 }, err=>{
   console.error(err);
@@ -338,6 +348,93 @@ function itemsOnDay(day){
     const match=sameDay(s,day)||(s<=day&&e>=day);
     if(filter&&it.status!==filter)return false;
     return match;
+  });
+}
+
+// ── ALERTAS DE VENCIMENTO ──
+function checkAlerts(){
+  const amanha = addDays(today, 1);
+  const banner = document.getElementById('alertBanner');
+  banner.innerHTML = '';
+
+  const vencendoHoje = window._items.filter(it => {
+    if(it.status==='ok') return false;
+    const fim = parseDate(it.fim);
+    return fim && sameDay(fim, today);
+  });
+
+  const vencendoAmanha = window._items.filter(it => {
+    if(it.status==='ok') return false;
+    const fim = parseDate(it.fim);
+    return fim && sameDay(fim, amanha);
+  });
+
+  let html = '';
+
+  vencendoHoje.forEach(it => {
+    html += `<div class="alert-card vencido">
+      <span class="alert-icon">🚨</span>
+      <div class="alert-body">
+        <div class="alert-title">VENCE HOJE!</div>
+        <div class="alert-text">${it.nome} — prazo termina hoje</div>
+      </div>
+      <button class="alert-action" onclick="openEdit('${it.id}')">Ver</button>
+      <button class="alert-close" onclick="this.closest('.alert-card').remove();checkBannerVisibility()">&#x2715;</button>
+    </div>`;
+  });
+
+  vencendoAmanha.forEach(it => {
+    html += `<div class="alert-card">
+      <span class="alert-icon">⏰</span>
+      <div class="alert-body">
+        <div class="alert-title">Vence amanha</div>
+        <div class="alert-text">${it.nome} — prazo termina amanha (${fmtDate(addDays(today,1))})</div>
+      </div>
+      <button class="alert-action" onclick="openEdit('${it.id}')">Ver</button>
+      <button class="alert-close" onclick="this.closest('.alert-card').remove();checkBannerVisibility()">&#x2715;</button>
+    </div>`;
+  });
+
+  if(html){
+    banner.innerHTML = html;
+    banner.classList.add('show');
+    // notificação do navegador
+    requestAndNotify(vencendoHoje, vencendoAmanha);
+  } else {
+    banner.classList.remove('show');
+  }
+}
+
+window.checkBannerVisibility = function(){
+  const banner = document.getElementById('alertBanner');
+  if(!banner.querySelector('.alert-card')) banner.classList.remove('show');
+};
+
+// notificação do navegador (push nativo)
+async function requestAndNotify(hoje, amanha){
+  if(!('Notification' in window)) return;
+  if(Notification.permission === 'denied') return;
+
+  if(Notification.permission !== 'granted'){
+    await Notification.requestPermission();
+  }
+
+  if(Notification.permission !== 'granted') return;
+
+  hoje.forEach(it => {
+    new Notification('CMT Agenda — Vence HOJE!', {
+      body: it.nome + ' tem prazo de termino hoje.',
+      icon: 'https://raw.githubusercontent.com/google/material-design-icons/master/png/action/event/materialicons/48dp/1x/baseline_event_black_48dp.png',
+      tag: 'vence-' + it.id
+    });
+  });
+
+  amanha.forEach(it => {
+    new Notification('CMT Agenda — Vence amanha', {
+      body: it.nome + ' tem prazo de termino amanha.',
+      icon: 'https://raw.githubusercontent.com/google/material-design-icons/master/png/action/event/materialicons/48dp/1x/baseline_event_black_48dp.png',
+      tag: 'vence-' + it.id
+    });
   });
 }
 
@@ -386,17 +483,8 @@ window.deleteItem=async function(){
 };
 
 // tooltip
-window.showTip=function(e,text){
-  const t=document.getElementById('tooltip');
-  t.textContent=text;t.classList.add('show');moveTip(e);
-};
-function moveTip(e){
-  const t=document.getElementById('tooltip');
-  let x=e.clientX+12,y=e.clientY-t.offsetHeight-14;
-  if(x+250>window.innerWidth)x=e.clientX-254;
-  if(y<0)y=e.clientY+14;
-  t.style.left=x+'px';t.style.top=y+'px';
-}
+window.showTip=function(e,text){const t=document.getElementById('tooltip');t.textContent=text;t.classList.add('show');moveTip(e);};
+function moveTip(e){const t=document.getElementById('tooltip');let x=e.clientX+12,y=e.clientY-t.offsetHeight-14;if(x+250>window.innerWidth)x=e.clientX-254;if(y<0)y=e.clientY+14;t.style.left=x+'px';t.style.top=y+'px';}
 window.hideTip=function(){document.getElementById('tooltip').classList.remove('show');};
 document.addEventListener('mousemove',e=>{if(document.getElementById('tooltip').classList.contains('show'))moveTip(e);});
 
@@ -418,7 +506,7 @@ window.goToday=function(){window._currentDate=new Date();render();};
 // render
 function makeCard(it,mini=false){
   const prog=calcProgress(it),hasObs=it.obs&&it.obs.trim();
-  const obs=hasObs?it.obs.replace(/\\/g,'').replace(/'/g,'').replace(/"/g,''):'';
+  const obs=hasObs?it.obs.replace(/'/g,'').replace(/"/g,''):'';
   const tipAttr=hasObs?`onmouseenter="showTip(event,'${obs}')" onmouseleave="hideTip()"`:'';
   if(mini)return`<div class="mini-card ${it.status}" onclick="event.stopPropagation();openEdit('${it.id}')" ${tipAttr}>${it.nome}</div>`;
   return`<div class="card ${it.status}" onclick="openEdit('${it.id}')" ${tipAttr}>
@@ -430,7 +518,7 @@ function makeCard(it,mini=false){
   </div>`;
 }
 
-window.render=function render(){
+window.render=function(){
   if(window._currentView==='week') renderWeek();
   else if(window._currentView==='month') renderMonth();
   else renderYear();
@@ -506,7 +594,7 @@ function renderYear(){
 document.getElementById('overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
 // PWA manifest
-const manifest={name:"CMT Agenda de Instalacoes",short_name:"CMT Agenda",start_url:"./",display:"standalone",background_color:"#f0ede8",theme_color:"#d4541a",icons:[{src:"https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg",sizes:"192x192",type:"image/svg+xml"}]};
+const manifest={name:"CMT Agenda de Instalacoes",short_name:"CMT Agenda",start_url:"./index.html",display:"standalone",background_color:"#f0ede8",theme_color:"#d4541a"};
 const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'});
 document.getElementById('manifestLink').href=URL.createObjectURL(blob);
 </script>
