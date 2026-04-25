@@ -22,6 +22,7 @@
     --status-at:#dc2626; --status-at-bg:#fef2f2;
     --status-mn:#7c3aed; --status-mn-bg:#f5f3ff;
     --status-ps:#0891b2; --status-ps-bg:#ecfeff;
+    --status-vt:#b45309; --status-vt-bg:#fef9c3;
     --weekend-bg:#fff5f5;
     --shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.05);
     --shadow-lg:0 8px 32px rgba(0,0,0,.10); --radius:12px;
@@ -147,6 +148,7 @@
   .card.at{background:var(--status-at-bg);border-color:var(--status-at);}
   .card.mn{background:var(--status-mn-bg);border-color:var(--status-mn);}
   .card.ps{background:var(--status-ps-bg);border-color:var(--status-ps);}
+  .card.vt{background:var(--status-vt-bg);border-color:var(--status-vt);}
   .card-name{font-weight:600;line-height:1.3;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .card-time{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);margin-bottom:2px;}
   .card-meta{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
@@ -157,6 +159,7 @@
   .card.at .card-badge{background:var(--status-at);color:#fff;}
   .card.mn .card-badge{background:var(--status-mn);color:#fff;}
   .card.ps .card-badge{background:var(--status-ps);color:#fff;}
+  .card.vt .card-badge{background:var(--status-vt);color:#fff;}
   .card-type-badge{font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px;background:rgba(0,0,0,.07);color:var(--text2);}
   .card-obs-icon{position:absolute;top:6px;right:6px;font-size:11px;opacity:.5;}
   .progress-bar{height:2px;background:var(--border);border-radius:2px;margin-top:4px;overflow:hidden;}
@@ -167,6 +170,7 @@
   .card.at .progress-fill{background:var(--status-at);}
   .card.mn .progress-fill{background:var(--status-mn);}
   .card.ps .progress-fill{background:var(--status-ps);}
+  .card.vt .progress-fill{background:var(--status-vt);}
 
   .mini-card{font-size:10px;padding:2px 5px;border-radius:4px;border-left:2px solid;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;font-weight:500;}
   .mini-card.ag{background:var(--status-ag-bg);border-color:var(--status-ag);color:var(--status-ag);}
@@ -175,6 +179,7 @@
   .mini-card.at{background:var(--status-at-bg);border-color:var(--status-at);color:var(--status-at);}
   .mini-card.mn{background:var(--status-mn-bg);border-color:var(--status-mn);color:var(--status-mn);}
   .mini-card.ps{background:var(--status-ps-bg);border-color:var(--status-ps);color:var(--status-ps);}
+  .mini-card.vt{background:var(--status-vt-bg);border-color:var(--status-vt);color:var(--status-vt);}
 
   /* TOOLTIP */
   .tooltip{display:none;position:fixed;background:var(--text);color:#fff;border-radius:10px;padding:10px 12px;font-size:12px;max-width:220px;line-height:1.5;z-index:999;box-shadow:var(--shadow-lg);pointer-events:none;}
@@ -215,6 +220,35 @@
   .type-btn{flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:transparent;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text2);}
   .type-btn.active-inst{background:var(--accent-light);border-color:var(--accent);color:var(--accent);}
   .type-btn.active-ps{background:#ecfeff;border-color:#0891b2;color:#0891b2;}
+  .type-btn.active-vt{background:#fef9c3;border-color:#b45309;color:#b45309;}
+
+
+  /* ── TAREFAS ── */
+  #tarefasSection{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);margin-top:16px;overflow:hidden;box-shadow:var(--shadow);}
+  .tarefas-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#1e293b 0%,#334155 100%);}
+  .tarefas-title{font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;letter-spacing:-.2px;}
+  .tarefas-badge{background:rgba(255,255,255,.2);color:#fff;border-radius:20px;padding:2px 8px;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+  .tarefas-input-row{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:8px;background:var(--surface2);}
+  .tarefas-input{flex:1;padding:9px 14px;border-radius:9px;border:1.5px solid var(--border);font-family:'Sora',sans-serif;font-size:13px;background:#fff;color:var(--text);outline:none;transition:border .15s;}
+  .tarefas-input:focus{border-color:#334155;}
+  .tarefas-add-btn{padding:9px 16px;border-radius:9px;border:none;background:#1e293b;color:#fff;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s;}
+  .tarefas-add-btn:hover{background:#334155;}
+  .tarefas-list{padding:8px 12px;max-height:320px;overflow-y:auto;}
+  .tarefas-list:empty::after{content:'Nenhuma tarefa ainda. Adicione acima!';display:block;text-align:center;color:var(--text3);font-size:12px;padding:20px;}
+  .tarefa-item{display:flex;align-items:flex-start;gap:10px;padding:10px 6px;border-bottom:1px solid var(--border);transition:background .1s;border-radius:6px;}
+  .tarefa-item:last-child{border-bottom:none;}
+  .tarefa-item:hover{background:var(--bg);}
+  .tarefa-check{width:18px;height:18px;flex-shrink:0;cursor:pointer;accent-color:#1e293b;margin-top:2px;}
+  .tarefa-body{flex:1;min-width:0;}
+  .tarefa-texto{font-size:13px;font-weight:500;color:var(--text);line-height:1.4;transition:all .2s;}
+  .tarefa-data{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--text3);margin-top:2px;}
+  .tarefa-item.done .tarefa-texto{text-decoration:line-through;color:var(--text3);}
+  .tarefa-item.done .tarefa-check{opacity:.5;}
+  .tarefas-footer{padding:8px 16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface2);}
+  .tarefas-count{font-size:11px;color:var(--text3);font-weight:500;}
+  .tarefas-filter{display:flex;gap:4px;}
+  .tf-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:transparent;font-family:'Sora',sans-serif;font-size:11px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .12s;}
+  .tf-btn.active{background:#1e293b;color:#fff;border-color:#1e293b;}
 
   @media(max-width:900px){
     .week-cols{grid-template-columns:repeat(4,1fr);}
@@ -302,6 +336,7 @@ else{setTimeout(function(){document.getElementById('loginInput').focus();},200);
       <div class="legend-item"><div class="legend-dot" style="background:var(--status-at)"></div>Atrasado</div>
       <div class="legend-item"><div class="legend-dot" style="background:var(--status-mn)"></div>Manutenção</div>
       <div class="legend-item"><div class="legend-dot" style="background:var(--status-ps)"></div>Pessoal</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--status-vt)"></div>Visita Técnica</div>
       <div class="legend-item"><div class="legend-dot" style="background:#fca5a5;border-radius:50%"></div>Fim de semana/Feriado</div>
     </div>
     <select class="filter-select" id="filterStatus" onchange="render()">
@@ -312,12 +347,38 @@ else{setTimeout(function(){document.getElementById('loginInput').focus();},200);
       <option value="at">Atrasado</option>
       <option value="mn">Manutenção</option>
       <option value="ps">Pessoal</option>
+      <option value="vt">Visita Técnica</option>
     </select>
   </div>
 </div>
 
 <main id="mainContent"></main>
 <div class="tooltip" id="tooltip"></div>
+
+<!-- TAREFAS SECTION (renderizado abaixo do mês) -->
+<div id="tarefasSection" style="display:none">
+  <div class="tarefas-header">
+    <div class="tarefas-title">
+      ✅ Tarefas &amp; Anotações
+      <span class="tarefas-badge" id="tarefasBadge">0</span>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,.6);">clique para marcar como feito</div>
+  </div>
+  <div class="tarefas-input-row">
+    <input class="tarefas-input" id="tarefaInput" placeholder="Nova tarefa ou anotação rápida..." onkeydown="if(event.key==='Enter')addTarefa()">
+    <button class="tarefas-add-btn" onclick="addTarefa()">+ Adicionar</button>
+  </div>
+  <div class="tarefas-list" id="tarefasList"></div>
+  <div class="tarefas-footer">
+    <div class="tarefas-count" id="tarefasCount">0 pendentes · 0 concluídas</div>
+    <div class="tarefas-filter">
+      <button class="tf-btn active" id="tfAll" onclick="filterTarefas('all')">Todas</button>
+      <button class="tf-btn" id="tfPend" onclick="filterTarefas('pend')">Pendentes</button>
+      <button class="tf-btn" id="tfDone" onclick="filterTarefas('done')">Concluídas</button>
+    </div>
+  </div>
+</div>
+
 
 <!-- MODAL -->
 <div class="overlay" id="overlay">
@@ -326,7 +387,8 @@ else{setTimeout(function(){document.getElementById('loginInput').focus();},200);
 
     <div class="type-toggle">
       <button class="type-btn active-inst" id="btnTipoInst" onclick="setTipo('inst')">📌 Instalação / Serviço</button>
-      <button class="type-btn" id="btnTipoPs" onclick="setTipo('ps')">🏠 Tarefa Pessoal</button>
+      <button class="type-btn" id="btnTipoPs" onclick="setTipo('ps')">🏠 Pessoal</button>
+      <button class="type-btn" id="btnTipoVt" onclick="setTipo('vt')">🔍 Visita Técnica</button>
     </div>
 
     <div class="form-group">
@@ -360,6 +422,7 @@ else{setTimeout(function(){document.getElementById('loginInput').focus();},200);
         <option value="ok">Concluído</option>
         <option value="at">Atrasado</option>
         <option value="mn">Manutenção</option>
+        <option value="vt">Visita Técnica</option>
       </select>
     </div>
 
@@ -497,9 +560,11 @@ window.setTipo = function(t){
   window._tipo = t;
   document.getElementById('btnTipoInst').className='type-btn'+(t==='inst'?' active-inst':'');
   document.getElementById('btnTipoPs').className='type-btn'+(t==='ps'?' active-ps':'');
+  document.getElementById('btnTipoVt').className='type-btn'+(t==='vt'?' active-vt':'');
   document.getElementById('groupStatus').style.display = t==='ps'?'none':'block';
-  document.getElementById('labelNome').textContent = t==='ps'?'Descrição da tarefa':'Cliente / Instalação';
-  document.getElementById('fNome').placeholder = t==='ps'?'Ex: Reunião, médico, banco...':'Ex: Fachada Loja Centro';
+  if(t==='vt') document.getElementById('fStatus').value='vt';
+  document.getElementById('labelNome').textContent = t==='ps'?'Descrição':t==='vt'?'Local / Cliente':'Cliente / Instalação';
+  document.getElementById('fNome').placeholder = t==='ps'?'Ex: Reunião, médico...':t==='vt'?'Ex: Cliente ABC — Rua X':'Ex: Fachada Loja Centro';
 };
 
 // data
@@ -527,7 +592,7 @@ function isoDate(d){return d.toISOString().slice(0,10);}
 function startOfWeek(d){const r=new Date(d);r.setHours(0,0,0,0);r.setDate(r.getDate()-r.getDay());return r;}
 function addDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r;}
 function sameDay(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();}
-function statusLabel(s){return{ag:'Agendado',em:'Em andamento',ok:'Concluído',at:'Atrasado',mn:'Manutenção',ps:'Pessoal'}[s]||s;}
+function statusLabel(s){return{ag:'Agendado',em:'Em andamento',ok:'Concluído',at:'Atrasado',mn:'Manutenção',ps:'Pessoal',vt:'Visita Técnica'}[s]||s;}
 function calcProgress(it){
   const s=parseDate(it.inicio),e=parseDate(it.fim);
   if(!s||!e)return 0;
@@ -608,7 +673,7 @@ window.saveItem=async function(){
     fim:document.getElementById('fFim').value,
     horaInicio:document.getElementById('fHoraInicio').value,
     horaFim:document.getElementById('fHoraFim').value,
-    status:tipo==='ps'?'ps':document.getElementById('fStatus').value,
+    status:tipo==='ps'?'ps':tipo==='vt'?'vt':document.getElementById('fStatus').value,
     obs:document.getElementById('fObs').value.trim(),
     updatedAt:Date.now()
   };
@@ -655,13 +720,14 @@ function makeCard(it,mini=false){
   const tipAttr=hasObs?`onmouseenter="showTip(event,'${obs}')" onmouseleave="hideTip()"`:'';
   const horaStr=(it.horaInicio?it.horaInicio:'')+(it.horaInicio&&it.horaFim?' → '+it.horaFim:'');
   const isPessoal=it.tipo==='ps';
-  const statusClass=isPessoal?'ps':(it.status||'ag');
+  const isVt=it.tipo==='vt'||it.status==='vt';
+  const statusClass=isPessoal?'ps':isVt?'vt':(it.status||'ag');
 
-  if(mini)return`<div class="mini-card ${statusClass}" onclick="event.stopPropagation();openEdit('${it.id}')" ${tipAttr}>${isPessoal?'🏠 ':''} ${it.nome}</div>`;
+  if(mini)return`<div class="mini-card ${statusClass}" onclick="event.stopPropagation();openEdit('${it.id}')" ${tipAttr}>${isPessoal?'🏠 ':isVt?'🔍 ':''} ${it.nome}</div>`;
 
   return`<div class="card ${statusClass}" onclick="openEdit('${it.id}')" ${tipAttr}>
     ${hasObs?'<span class="card-obs-icon">💬</span>':''}
-    <div class="card-name">${isPessoal?'🏠 ':''} ${it.nome}</div>
+    <div class="card-name">${isPessoal?'🏠 ':isVt?'🔍 ':''} ${it.nome}</div>
     ${horaStr?`<div class="card-time">⏰ ${horaStr}</div>`:''}
     <div class="card-meta">
       <span class="card-badge">${statusLabel(statusClass)}</span>
@@ -679,6 +745,7 @@ window.render=function(){
 };
 
 function renderWeek(){
+  document.getElementById('tarefasSection').style.display='none';
   const sw=startOfWeek(window._currentDate);
   const days=Array.from({length:7},(_,i)=>addDays(sw,i));
   document.getElementById('periodLabel').textContent=`${fmtDate(days[0])} — ${fmtDate(days[6])}`;
@@ -731,6 +798,7 @@ function renderWeek(){
 }
 
 function renderMonth(){
+  document.getElementById('tarefasSection').style.display='block';
   const y=window._currentDate.getFullYear(),m=window._currentDate.getMonth();
   const mn=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   document.getElementById('periodLabel').textContent=`${mn[m]} ${y}`;
@@ -760,6 +828,7 @@ function renderMonth(){
 }
 
 function renderYear(){
+  document.getElementById('tarefasSection').style.display='none';
   const y=window._currentDate.getFullYear();
   document.getElementById('periodLabel').textContent=`${y}`;
   const fn=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -789,6 +858,67 @@ function renderYear(){
   h+='</div>';
   document.getElementById('mainContent').innerHTML=h;
 }
+
+
+// ── TAREFAS ──
+window._tarefasFilter = 'all';
+const tarefasRef = collection(db, 'tarefas');
+window._tarefas = [];
+
+onSnapshot(tarefasRef, snap => {
+  window._tarefas = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.createdAt-a.createdAt);
+  renderTarefas();
+});
+
+window.addTarefa = async function(){
+  const inp = document.getElementById('tarefaInput');
+  const texto = inp.value.trim();
+  if(!texto) return;
+  const now = new Date();
+  const dataLabel = now.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  await addDoc(tarefasRef, {texto, dataLabel, done:false, createdAt:Date.now()});
+  inp.value = '';
+  inp.focus();
+};
+
+window.toggleTarefa = async function(id, done){
+  await updateDoc(doc(db,'tarefas',id), {done:!done});
+};
+
+window.filterTarefas = function(f){
+  window._tarefasFilter = f;
+  ['all','pend','done'].forEach(k=>{
+    document.getElementById('tf'+k.charAt(0).toUpperCase()+k.slice(1))?.classList.toggle('active', k===f);
+  });
+  renderTarefas();
+};
+
+function renderTarefas(){
+  const list = document.getElementById('tarefasList');
+  const badge = document.getElementById('tarefasBadge');
+  const count = document.getElementById('tarefasCount');
+  if(!list) return;
+
+  const f = window._tarefasFilter;
+  const all = window._tarefas;
+  const pendentes = all.filter(t=>!t.done).length;
+  const concluidas = all.filter(t=>t.done).length;
+  const filtered = f==='pend'?all.filter(t=>!t.done):f==='done'?all.filter(t=>t.done):all;
+
+  badge.textContent = pendentes;
+  count.textContent = `${pendentes} pendente${pendentes!==1?'s':''} · ${concluidas} concluída${concluidas!==1?'s':''}`;
+
+  list.innerHTML = filtered.map(t=>`
+    <div class="tarefa-item${t.done?' done':''}">
+      <input type="checkbox" class="tarefa-check" ${t.done?'checked':''} onchange="toggleTarefa('${t.id}',${t.done})">
+      <div class="tarefa-body">
+        <div class="tarefa-texto">${t.texto}</div>
+        <div class="tarefa-data">📅 ${t.dataLabel||''}</div>
+      </div>
+    </div>
+  `).join('') || '<div style="text-align:center;padding:20px;color:var(--text3);font-size:12px;">Nenhuma tarefa aqui.</div>';
+}
+
 
 document.getElementById('overlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
